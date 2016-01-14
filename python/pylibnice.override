@@ -5,7 +5,7 @@ headers
 #include <Python.h>
 #include "pygobject.h"
 #include "agent.h"
-#include "../agent/agent-enumtypes.h"
+#include "agent-enumtypes.h"
 #include <glib.h>
 
 %%
