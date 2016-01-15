@@ -35,7 +35,7 @@ _wrap_nice_agent_new(PyGObject *self, PyObject *args, PyObject *kwargs)
 
 	(void)kwargs;
 
-	if (! PyArg_ParseTuple( args, "O!OO", &PyGMainContext_Type, &maincontext, &compatibility_obj))
+	if (! PyArg_ParseTuple( args, "O!O", &PyGMainContext_Type, &maincontext, &compatibility_obj))
         return -1;
 
 	if (pyg_enum_get_value(NICE_TYPE_COMPATIBILITY, compatibility_obj, &compatibility))
