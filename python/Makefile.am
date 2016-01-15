@@ -18,7 +18,8 @@ AM_CFLAGS = \
 	-I $(top_srcdir)/agent
 
 BUILT_SOURCES =						\
-	pylibnice.c
+	pylibnice.c \
+    agent-enumtypes.c
 
 pylibnicedir = $(pyexecdir)
 pylibnice_LTLIBRARIES = libnice.la
