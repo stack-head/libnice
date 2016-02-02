@@ -3001,6 +3001,26 @@ nice_agent_set_port_range (NiceAgent *agent, guint stream_id, guint component_id
 
   agent_unlock_and_emit (agent);
 }
+    
+    
+NICEAPI_EXPORT gboolean
+nice_agent_add_local_address_from_string (NiceAgent *agent, const gchar *addr)
+{
+        
+  g_return_val_if_fail (NICE_IS_AGENT (agent), FALSE);
+  g_return_val_if_fail (addr != NULL, FALSE);
+        
+  NiceAddress *localAddr = nice_address_new();
+  nice_address_set_from_string(localAddr,addr);
+        
+  agent_lock();
+        
+  nice_address_set_port (localAddr, 0);
+  agent->local_addresses = g_slist_append (agent->local_addresses, localAddr);
+        
+  agent_unlock_and_emit (agent);
+  return TRUE;
+}
 
 NICEAPI_EXPORT gboolean
 nice_agent_add_local_address (NiceAgent *agent, NiceAddress *addr)
@@ -4949,6 +4969,23 @@ out:
   agent_unlock_and_emit (agent);
   return G_SOURCE_REMOVE;
 }
+
+
+NICEAPI_EXPORT gboolean
+nice_agent_attach_recv_gi (
+  NiceAgent *agent,
+  guint stream_id,
+  guint component_id,
+  GMainContext *ctx,
+  NiceAgentRecvFunc func,
+  gpointer data,
+  GDestroyNotify destroy_func)
+{
+  nice_agent_attach_recv(agent,stream_id,component_id,ctx,func,data);
+}
+
+
+
 
 NICEAPI_EXPORT gboolean
 nice_agent_attach_recv (
