@@ -940,7 +940,7 @@ nice_agent_attach_recv (
   gpointer data);
 
 /**
- * nice_agent_attach_recv_gi:
+ * nice_agent_attach_recv_with_callback_dispose_notification:
  * @agent: The #NiceAgent Object
  * @stream_id: The ID of stream
  * @component_id: The ID of the component
@@ -949,6 +949,8 @@ nice_agent_attach_recv (
  * the stream's component (will not be called for STUN messages that
  * should be handled by #NiceAgent itself)
  * @data: user data associated with the callback
+ * @callback_destroy_notify_func: This callback gets called when the component is destroyed
+ * or when the callback is null'd or changed
  *
  * Attaches the stream's component's sockets to the Glib Mainloop Context in
  * order to be notified whenever data becomes available for a component,
@@ -967,14 +969,14 @@ nice_agent_attach_recv (
  * Returns: %TRUE on success, %FALSE if the stream or component IDs are invalid.
  */
 gboolean
-        nice_agent_attach_recv_gi (
+        nice_agent_attach_recv_with_callback_dispose_notification (
         NiceAgent *agent,
         guint stream_id,
         guint component_id,
         GMainContext *ctx,
         NiceAgentRecvFunc func,
         gpointer data,
-        GDestroyNotify destroy_func);
+        GDestroyNotify callback_destroy_notify_func);
 
 
 

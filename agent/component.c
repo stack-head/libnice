@@ -308,6 +308,9 @@ component_free (Component *cmp)
   g_warn_if_fail (cmp->local_candidates == NULL);
   g_warn_if_fail (cmp->remote_candidates == NULL);
   g_warn_if_fail (cmp->incoming_checks == NULL);
+  if(cmp->dispose_io_callback_notify) {
+    cmp->dispose_io_callback_notify(cmp);
+  }
 
   g_clear_object (&cmp->tcp);
   g_clear_object (&cmp->stop_cancellable);
@@ -716,6 +719,9 @@ component_set_io_callback (Component *component,
 
   g_mutex_lock (&component->io_mutex);
 
+  if(component->dispose_io_callback_notify){
+    component->dispose_io_callback_notify(component);
+  }
   if (func != NULL) {
     component->io_callback = func;
     component->io_user_data = user_data;
@@ -736,6 +742,16 @@ component_set_io_callback (Component *component,
   component->recv_buf_error = error;
 
   g_mutex_unlock (&component->io_mutex);
+}
+
+void
+component_set_io_callback_with_callback_dispose_notification (Component *component,
+NiceAgentRecvFunc func, GDestroyNotify dispose_notify, gpointer user_data,
+NiceInputMessage *recv_messages, guint n_recv_messages,
+GError **error)
+{
+  component_set_io_callback(component,func,user_data,recv_messages,n_recv_messages,error);
+  component->dispose_io_callback_notify = dispose_notify;
 }
 
 gboolean
