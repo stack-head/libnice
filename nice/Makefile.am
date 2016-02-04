@@ -80,11 +80,10 @@ if HAVE_INTROSPECTION
 #  ../agent/interfaces.h \
 #  ../agent/pseudotcp.h
 
-FAKE= \
+INTROSPECTIONHEADERS = \
   ../agent/agent.h
 
-#introspection_sources = $(pkginclude_HEADERS)
-introspection_sources = $(FAKE)
+introspection_sources = $(INTROSPECTIONHEADERS)
 
 Nice-0.1.gir: libnice.la
 Nice_0_1_gir_INCLUDES = GObject-2.0 Gio-2.0
