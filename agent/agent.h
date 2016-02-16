@@ -447,6 +447,24 @@ nice_agent_new_reliable (GMainContext *ctx, NiceCompatibility compat);
 gboolean
 nice_agent_add_local_address (NiceAgent *agent, NiceAddress *addr);
 
+/**
+ * nice_agent_add_local_address_from_string:
+ * @agent: The #NiceAgent Object
+ * @addr: The address to listen to in string format
+ *
+ * Add a local address from which to derive local host candidates for
+ * candidate gathering.
+ * <para>
+ * Since 0.0.5, if this method is not called, libnice will automatically
+ * discover the local addresses available
+ * </para>
+ *
+ * See also: nice_agent_gather_candidates()
+ * Returns: %TRUE on success, %FALSE on fatal (memory allocation) errors
+ */
+gboolean
+nice_agent_add_local_address_from_string (NiceAgent *agent, const gchar *addr);
+
 
 /**
  * nice_agent_add_stream:
@@ -920,6 +938,47 @@ nice_agent_attach_recv (
   GMainContext *ctx,
   NiceAgentRecvFunc func,
   gpointer data);
+
+/**
+ * nice_agent_attach_recv_with_callback_dispose_notification:
+ * @agent: The #NiceAgent Object
+ * @stream_id: The ID of stream
+ * @component_id: The ID of the component
+ * @ctx: The Glib Mainloop Context to use for listening on the component
+ * @func: (scope NOTIFIED): The callback function to be called when data is received on
+ * the stream's component (will not be called for STUN messages that
+ * should be handled by #NiceAgent itself)
+ * @data: user data associated with the callback
+ * @callback_destroy_notify_func: This callback gets called when the component is destroyed
+ * or when the callback is null'd or changed
+ *
+ * Attaches the stream's component's sockets to the Glib Mainloop Context in
+ * order to be notified whenever data becomes available for a component,
+ * and to enable #NiceAgent to receive STUN messages (during the
+ * establishment of ICE connectivity).
+ *
+ * This must not be used in combination with nice_agent_recv_messages() (or
+ * #NiceIOStream or #NiceInputStream) on the same stream/component pair.
+ *
+ * Calling nice_agent_attach_recv() with a %NULL @func will detach any existing
+ * callback and cause reception to be paused for the given stream/component
+ * pair. You must iterate the previously specified #GMainContext sufficiently to
+ * ensure all pending I/O callbacks have been received before calling this
+ * function to unset @func, otherwise data loss of received packets may occur.
+ *
+ * Returns: %TRUE on success, %FALSE if the stream or component IDs are invalid.
+ */
+gboolean
+        nice_agent_attach_recv_with_callback_dispose_notification (
+        NiceAgent *agent,
+        guint stream_id,
+        guint component_id,
+        GMainContext *ctx,
+        NiceAgentRecvFunc func,
+        gpointer data,
+        GDestroyNotify callback_destroy_notify_func);
+
+
 
 /**
  * nice_agent_recv:

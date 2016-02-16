@@ -166,6 +166,7 @@ struct _Component
                                          lock is to be taken, it must always be
                                          taken before this one */
   NiceAgentRecvFunc io_callback;    /* function called on io cb */
+  GDestroyNotify dispose_io_callback_notify;  /* function called when the io_callback reference is disposed.*/
   gpointer io_user_data;            /* data passed to the io function */
   GQueue pending_io_messages;       /* queue of messages which have been
                                          received but not passed to the client
@@ -257,9 +258,14 @@ void
 component_set_io_context (Component *component, GMainContext *context);
 void
 component_set_io_callback (Component *component,
-    NiceAgentRecvFunc func, gpointer user_data,
-    NiceInputMessage *recv_messages, guint n_recv_messages,
-    GError **error);
+NiceAgentRecvFunc func, gpointer user_data,
+NiceInputMessage *recv_messages, guint n_recv_messages,
+GError **error);
+void
+component_set_io_callback_with_callback_dispose_notification (Component *component,
+NiceAgentRecvFunc func, GDestroyNotify dispose_notify, gpointer user_data,
+NiceInputMessage *recv_messages, guint n_recv_messages,
+GError **error);
 void
 component_emit_io_callback (Component *component,
     const guint8 *buf, gsize buf_len);

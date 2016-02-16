@@ -315,6 +315,16 @@ AS_IF([test "${enable_coverage}" != "no"], [
 ])
 AC_SUBST(CCACHE_DISABLE)
 
+dnl Debug Symbols
+AC_ARG_ENABLE([symbols],
+[AS_HELP_STRING([--enable-symbols],
+[build with debug symbols (default disabled)])],,
+[enable-symbols="no"])
+AS_IF([test "${enable_symbols}" != "no"], [
+CFLAGS="${CFLAGS} -g3 -O0"
+CCACHE_DISABLE=1
+])
+
 dnl build static plugins or not
 AC_MSG_CHECKING([whether to build static plugins or not])
 AC_ARG_ENABLE(
