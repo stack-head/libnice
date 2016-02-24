@@ -385,7 +385,7 @@ typedef enum
  * @component_id: The id of the component of the stream
  *        which received the data
  * @len: The length of the data
- * @buf: The buffer containing the data received
+ * @buf: (array length=len): The buffer containing the data received
  * @user_data: The user data set in nice_agent_attach_recv()
  *
  * Callback function when data is received on a component
@@ -717,7 +717,7 @@ nice_agent_set_remote_candidates (
  * @stream_id: The ID of the stream to send to
  * @component_id: The ID of the component to send to
  * @len: The length of the buffer to send
- * @buf: The buffer of data to send
+ * @buf: (array length=len): The buffer of data to send
  *
  * Sends a data payload over a stream's component.
  *
