@@ -10,6 +10,10 @@ include common.mk
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
+if WANT_PYTHON
+PYTHON_SUBDIR = python
+endif
+
 SUBDIRS = \
 	stun \
 	socket \
@@ -19,7 +23,8 @@ SUBDIRS = \
 	gst \
 	docs \
 	tests \
-	examples
+	examples \
+	$(PYTHON_SUBDIR)
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-assert -enable-gtk-doc --enable-introspection
 
