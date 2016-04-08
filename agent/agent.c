@@ -5711,6 +5711,9 @@ nice_agent_parse_remote_sdp (NiceAgent *agent, const gchar *sdp)
     }
   }
 
+  int session_ufrag_index = -1;
+  int session_password_index = -1;
+
   sdp_lines = g_strsplit (sdp, "\n", 0);
   for (i = 0; sdp_lines && sdp_lines[i]; i++) {
     if (g_str_has_prefix (sdp_lines[i], "m=")) {
@@ -5724,20 +5727,34 @@ nice_agent_parse_remote_sdp (NiceAgent *agent, const gchar *sdp)
         goto done;
       }
       current_stream = stream_item->data;
-   } else if (g_str_has_prefix (sdp_lines[i], "a=ice-ufrag:")) {
+      if(session_ufrag_index != -1){
+        g_strlcpy(current_stream->remote_ufrag, sdp_lines[session_ufrag_index] + 12,
+                    NICE_STREAM_MAX_UFRAG);
+      }
+      if(session_password_index != -1) {
+        g_strlcpy(current_stream->remote_password, sdp_lines[session_password_index] + 10,
+                    NICE_STREAM_MAX_PWD);
+      }
+    } else if (g_str_has_prefix (sdp_lines[i], "a=ice-ufrag:")) {
       if (current_stream == NULL) {
+        session_ufrag_index = i;
+      } else if(session_ufrag_index == -1){
+        g_strlcpy(current_stream->remote_ufrag, sdp_lines[i] + 12,
+                  NICE_STREAM_MAX_UFRAG);
+      } else {
         ret = -1;
         goto done;
       }
-      g_strlcpy (current_stream->remote_ufrag, sdp_lines[i] + 12,
-          NICE_STREAM_MAX_UFRAG);
     } else if (g_str_has_prefix (sdp_lines[i], "a=ice-pwd:")) {
       if (current_stream == NULL) {
-        ret = -1;
-        goto done;
+        session_password_index = i;
+      } else if(session_password_index==-1){
+        g_strlcpy(current_stream->remote_password, sdp_lines[i] + 10,
+                    NICE_STREAM_MAX_PWD);
+      } else {
+          ret = -1;
+          goto done;
       }
-      g_strlcpy (current_stream->remote_password, sdp_lines[i] + 10,
-          NICE_STREAM_MAX_PWD);
     } else if (g_str_has_prefix (sdp_lines[i], "a=candidate:")) {
       NiceCandidate *candidate = NULL;
       Component *component = NULL;
