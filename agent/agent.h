@@ -717,7 +717,7 @@ nice_agent_set_remote_candidates (
  * @stream_id: The ID of the stream to send to
  * @component_id: The ID of the component to send to
  * @len: The length of the buffer to send
- * @buf: The buffer of data to send
+ * @buf: (array length=len) (element-type gint8): The buffer of data to send
  *
  * Sends a data payload over a stream's component.
  *
