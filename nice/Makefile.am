@@ -81,7 +81,8 @@ if HAVE_INTROSPECTION
 #  ../agent/pseudotcp.h
 
 INTROSPECTIONHEADERS = \
-  ../agent/agent.h
+  ../agent/agent.h \
+  ../agent/debug.h
 
 introspection_sources = $(INTROSPECTIONHEADERS)
 
