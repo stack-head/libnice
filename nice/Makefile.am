@@ -74,15 +74,13 @@ INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
 if HAVE_INTROSPECTION
 
-#  ../agent/candidate.h \
-#  ../agent/debug.h \
-#  ../agent/address.h \
-#  ../agent/interfaces.h \
-#  ../agent/pseudotcp.h
-
 INTROSPECTIONHEADERS = \
   ../agent/agent.h \
-  ../agent/debug.h
+  ../agent/candidate.h \
+  ../agent/debug.h \
+  ../agent/address.h \
+  ../agent/interfaces.h \
+  ../agent/pseudotcp.h
 
 introspection_sources = $(INTROSPECTIONHEADERS)
 
