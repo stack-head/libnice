@@ -66,6 +66,9 @@ pkgconfig_DATA = nice.pc
 # GObject introspection
 #
 # We need --accept-unprefixed because of PseudoTcp and TurnServer.
+# Introspection needs to operate on the library that ultimately gets installed, libnice.la.
+# Introspection will run without complaint on any of the sublibraries that make up libnice.la,
+# but for the python calls to successfully run introspection needs to be targeted at libnice.la.
 #
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
